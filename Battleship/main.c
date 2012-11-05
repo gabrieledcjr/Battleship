@@ -22,11 +22,6 @@
 int main (void)
 {
 	int i = 0;   // counters
-	Boolean flag = FALSE;
-
-	FILE *outStream = NULL;
-
-	short player = 0; // 0 -> player1, 1 -> player2
 
 	/**
 	 * Two boards exist within the game. Hint: each board should be 
@@ -37,12 +32,14 @@ int main (void)
 	Cell playerOneGameBoard[ROWS][COLS];
 	Cell playerTwoGameBoard[ROWS][COLS];
 
-	WaterCraft ship [NUM_OF_SHIPS] = {{'c', CARRIER}, {'b', BATTLESHIP}, 
-	                                  {'r', CRUISER}, {'s', SUBMARINE}, 
-	                                  {'d', DESTROYER}};
-	//int shipLength [NUM_OF_SHIPS] = {5, 4, 3, 3, 2};
-	int direction = -1;
-	Coordinate position;
+	WaterCraft ship[NUM_OF_SHIPS] = {{'c', CARRIER, "carrier"}, {'b', BATTLESHIP, "battleship"}, 
+	                                 {'r', CRUISER, "cruiser"}, {'s', SUBMARINE, "submarine"}, 
+	                                 {'d', DESTROYER, "destroyer"}};
+
+	short player = 0; // 0 -> player1, 1 -> player2
+	int option = 0;
+	
+	FILE *outStream = NULL;
 
 	outStream = fopen (LOG_FILE_NAME, "w");
 
@@ -84,22 +81,17 @@ int main (void)
 	 * Battleship second, Cruiser third, Submarine fourth, and the Destroyer 
 	 * last. 
 	 */
-
-	for (i = 0; i < NUM_OF_SHIPS; i++) {
-		while (TRUE) {
-			// 0 -> horizontal, 1 -> vertical
-			direction = getRandomNumber (0, 1);
-			position = generatePosition (direction, ship[i].type);
-			printf ("ship: %c\n", ship[i].symbol);
-			printf ("direction: %d\n", direction);
-			printf ("row: %d\n", position.row);
-			printf ("col: %d\n", position.column);
-
-			if (isValidLocation (playerOneGameBoard, 
-				                 position, direction, ship[i].type)) break;
-		}
-
-		putShipOnGameBoard (playerOneGameBoard, ship[i], position, direction);
+	printf ("PLAYER 1\n");
+	printf ("1: Manually\n");
+	printf ("2: Randomly\n");
+	printf ("Enter Option: ");
+	scanf ("%d", &option);
+	
+	switch (option) {
+		case 1: manuallyPlaceShipsOnGameBoard (playerOneGameBoard, ship);
+	            break;
+		case 2: randomlyPlaceShipsOnGameBoard (playerOneGameBoard, ship);
+				break;
 	}
 
 	printGameBoard (playerOneGameBoard, ROWS, COLS);
@@ -117,12 +109,16 @@ int main (void)
 	/**
 	 * Player2's ships must be randomly placed. Note that the placement of 
 	 * Player2's ships must be unknown. Thus, Player2's board will only 
-	 * display '-' in each cell after the placement of each ship.
+	 * display '~' in each cell after the placement of each ship.
 	 */
+	printf ("PLAYER 2\n");
+	randomlyPlaceShipsOnGameBoard (playerTwoGameBoard, ship);
+	printGameBoard (playerTwoGameBoard, ROWS, COLS);
 
 	/**
 	 * The program should randomly select Player1 or Player2 to go first.
 	 */
+	player = getRandomNumber (0, 1);
 
 	/**
 	 * Once it has been decided on which player goes first, the game starts. 

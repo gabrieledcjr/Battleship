@@ -23,8 +23,8 @@ void initializeGameBoard (Cell gameBoard[][COLS], int rows, int cols) {
 
 	for (i = 0; i < ROWS; i++)
 		for (j = 0; j < COLS; j++) {
-			gameBoard[i][j].symbol = WATER;
-			gameBoard[i][j].position.row = i;
+			gameBoard[i][j].symbol          = WATER;
+			gameBoard[i][j].position.row    = i;
 			gameBoard[i][j].position.column = j;
 		}
 }
@@ -49,10 +49,10 @@ Coordinate generatePosition (int direction, int length) {
 	Coordinate position;
 
 	if (direction == HORIZONTAL) {
-		position.row = getRandomNumber (0, ROWS);
-		position.column = getRandomNumber (0, COLS - length + 1);
+		position.row    = getRandomNumber (0, ROWS);
+		position.column = getRandomNumber (0, COLS - length);
 	} else { // VERTICAL
-		position.row = getRandomNumber (0, ROWS - length + 1);
+		position.row    = getRandomNumber (0, ROWS - length);
 		position.column = getRandomNumber (0, COLS);
 	}
 
@@ -66,10 +66,12 @@ Boolean isValidLocation (Cell gameBoard[][COLS], Coordinate position,
 
 	for (i = 0; isValid && i < length; i++) {
 		if (direction == HORIZONTAL) {
-			if (gameBoard [position.row][position.column + i].symbol != WATER)
+			if (gameBoard [position.row][position.column + i].symbol != WATER &&
+				(position.column + i) < COLS)
 				isValid = FALSE;
 		} else { // VERTICAL
-			if (gameBoard [position.row + i][position.column].symbol != WATER)
+			if (gameBoard [position.row + i][position.column].symbol != WATER &&
+				(position.row + i) < ROWS)
 				isValid = FALSE;
 		}
 	}
@@ -79,14 +81,100 @@ Boolean isValidLocation (Cell gameBoard[][COLS], Coordinate position,
 
 void putShipOnGameBoard (Cell gameBoard[][COLS], WaterCraft ship, 
 	                     Coordinate position, int direction) {
-	int i = ship.type - 1;
+	int i = ship.length - 1;
 
-	for (i = 0; i < ship.type; i++) {
+	for (i = 0; i < ship.length; i++) {
 		if (direction == HORIZONTAL) 
 			gameBoard [position.row][position.column + i].symbol = ship.symbol;
 		else // VERTICAL
 			gameBoard [position.row + i][position.column].symbol = ship.symbol;
 	}
+}
+
+void manuallyPlaceShipsOnGameBoard (Cell gameBoard[][COLS], WaterCraft ship[]) {
+	char stringPosition[11] = "";
+	Coordinate position[5];
+	int i = 0, j = 0;
+	Boolean isValid = FALSE;
+
+	fflush (stdin);
+
+	for (i = 0; i < NUM_OF_SHIPS; i++) {
+		while (TRUE) {
+			printf ("Enter the %d cells to place the %s across:\n", ship[i].length, ship[i].name);
+			scanf ("%s", stringPosition);
+
+			// convertStringtoPosition returns false if unsuccessful
+			if (convertStringtoPosition (position, stringPosition, ship[i].length)) {
+				isValid = TRUE;
+				for (j = 0; j < ship[i].length; j++) {
+					if (gameBoard[position[j].row][position[j].column].symbol == WATER) {
+						gameBoard[position[j].row][position[j].column].symbol = ship[i].symbol;
+					} else {
+						isValid = FALSE;
+						printf ("INVALID\n");
+						if (j != 0)
+							while (j >= 0) {
+								gameBoard[position[j].row][position[j].column].symbol = WATER;
+								j--;
+							}
+						break;
+					}
+				}
+			} else {
+				isValid = FALSE;
+				printf ("INVALID!\n");
+			}
+
+			if (isValid == TRUE) break;
+		}
+
+	}
+}
+
+void randomlyPlaceShipsOnGameBoard (Cell gameBoard[][COLS], WaterCraft ship[]) {
+	Coordinate position;
+	int direction = -1;
+	int i = 0;
+
+	for (i = 0; i < NUM_OF_SHIPS; i++) {
+		while (TRUE) {
+			// 0 -> horizontal, 1 -> vertical
+			direction = getRandomNumber (0, 1);
+			position = generatePosition (direction, ship[i].length);
+
+			if (isValidLocation (gameBoard, position, direction, ship[i].length)) break;
+		}
+
+		putShipOnGameBoard (gameBoard, ship[i], position, direction);
+	}
+}
+
+Boolean convertStringtoPosition (Coordinate position[], char *stringPosition, int length) {
+	Boolean flag = TRUE;
+	char temp = '\0';
+	int i = 0, j = 0, k = 1;
+
+	// checks if length of input is good
+	if (strlen (stringPosition)/2 == length) {
+		// loops through the length of the ship
+		for (i = 0; i < length && flag; i++) {
+			// checks if each cell is a digit
+			if (isdigit (stringPosition[j]) && isdigit (stringPosition[k])) {
+				position[i].row    = stringPosition[j] - '0';
+				position[i].column = stringPosition[k] - '0'; 
+				printf ("r = %d, c = %d\n", position[i].row, position[i].column);
+				j += 2;
+				k += 2;
+			} else {
+				flag = FALSE;
+			}
+		}
+	} else {
+		flag = FALSE;
+	}
+
+	return flag;
 }
 
 /**

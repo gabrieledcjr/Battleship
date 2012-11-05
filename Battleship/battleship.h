@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
+#include <string.h>
+#include <ctype.h>
 
 #define ROWS 10
 #define COLS 10
@@ -37,6 +39,12 @@ typedef enum {
 	DESTROYER = 2
 } ShipType;
 
+typedef struct watercraft {
+	char symbol;
+	ShipType length;
+	char *name;
+} WaterCraft;
+
 typedef struct stats {
 	int numHits;
 	int numMisses;
@@ -54,11 +62,6 @@ typedef struct cell {
 	Coordinate position;
 } Cell;
 
-typedef struct watercraft {
-	char symbol;
-	ShipType type;
-} WaterCraft;
-
 void welcomeScreen (void);
 void initializeGameBoard (Cell gameBoard[][COLS], int rows, int cols);
 void printGameBoard (Cell gameBoard [][COLS], int rows, int cols);
@@ -69,6 +72,9 @@ Boolean isValidLocation (Cell gameBoard[][COLS],
 				         int direction, int length);
 void putShipOnGameBoard (Cell gameBoard[][COLS], WaterCraft ship, 
 	                     Coordinate position, int direction);
+void manuallyPlaceShipsOnGameBoard (Cell gameBoard[][COLS], WaterCraft ship[]);
+void randomlyPlaceShipsOnGameBoard (Cell gameBoard[][COLS], WaterCraft ship[]);
+Boolean convertStringtoPosition (Coordinate position[], char *stringPosition, int length);
 
 int getRandomNumber (int lowest, int highest);
 
