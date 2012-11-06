@@ -57,11 +57,11 @@ int main (void)
 	short shot    = 0;             /* holds temp value if ship has been shot */
 	int   option  = 0;             /* option for player to place ship manually or randomly */
 	int   north   = 0,             /* holds change of value when going north */
-		south   = 0,             /* holds change of value when going south */
-		east    = 0,             /* holds change of value when going east */
-		west    = 0;             /* holds change of value when going west */
+		  south   = 0,             /* holds change of value when going south */
+		  east    = 0,             /* holds change of value when going east */
+		  west    = 0;             /* holds change of value when going west */
 	int   i       = 0,             
-		counter = 1;             /* i and counter are used as counters */
+		  counter = 1;             /* i and counter are used as counters */
 
 	char  shipSymbol = '\0';       /* temporary value to save character symbol of the ship */
 	
