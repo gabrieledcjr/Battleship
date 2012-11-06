@@ -21,7 +21,7 @@
  */
 void welcomeScreen (void) {
 	printf ("XXXXX   XXXX  XXXXXX XXXXXX XX     XXXXXX  XXXXX XX  XX XX XXXX\n");
-    printf ("XX  XX XX  XX   XX     XX   XX     XX     XX     XX  XX XX XX  XX\n");
+	printf ("XX  XX XX  XX   XX     XX   XX     XX     XX     XX  XX XX XX  XX\n");
 	printf ("XXXXX  XX  XX   XX     XX   XX     XXXX    XXXX  XXXXXX XX XXXX\n"); 
 	printf ("XX  XX XXXXXX   XX     XX   XX     XX         XX XX  XX XX XX\n");
 	printf ("XXXXX  XX  XX   XX     XX   XXXXXX XXXXXX XXXXX  XX  XX XX XX\n");
@@ -32,7 +32,7 @@ void welcomeScreen (void) {
 	printf ("3. Player 1 will be prompted if user wants to manually input coordinates\n");
 	printf ("   for the game board or have the computer randomly generate a game board\n");
 	printf ("4. There are five types of ships to be placed by longest length to the\n"); 
-    printf ("   shortest; [c] Carrier has 5 cells, [b] Battleship has 4 cells, [r] Cruiser\n");
+	printf ("   shortest; [c] Carrier has 5 cells, [b] Battleship has 4 cells, [r] Cruiser\n");
 	printf ("   has 3 cells, [s] Submarine has 3 cells, [d] Destroyer has 2 cells\n");
 	printf ("5. The computer randomly selects which player goes first\n");
 	printf ("6. The game begins as each player tries to guess the location of the ships\n");
